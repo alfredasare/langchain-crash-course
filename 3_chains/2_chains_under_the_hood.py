@@ -18,11 +18,13 @@ prompt_template = ChatPromptTemplate.from_messages(
 )
 
 # Create individual runnables (steps in the chain)
+# Runnable is a task that's a Lambda function
 format_prompt = RunnableLambda(lambda x: prompt_template.format_prompt(**x))
 invoke_model = RunnableLambda(lambda x: model.invoke(x.to_messages()))
 parse_output = RunnableLambda(lambda x: x.content)
 
 # Create the RunnableSequence (equivalent to the LCEL chain)
+# RunnableSequence is a chain of Runnable objects
 chain = RunnableSequence(first=format_prompt, middle=[invoke_model], last=parse_output)
 
 # Run the chain
